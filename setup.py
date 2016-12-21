@@ -37,10 +37,10 @@ def trans_columns():
 	return(col_list)
 
 
-def get_data(col_list):
+def get_data(col_list, location):
 	# reads file into df.  Modify to pass location for train and test.
 
-	location = r'C:\Users\bob071988\thinkful\ds-new\UCI\test\X_test.txt'
+	# location = r'C:\Users\bob071988\thinkful\ds-new\UCI\test\X_test.txt'
 
 	df = pd.read_table(location, header = None, delim_whitespace=True, names = col_list)
 	return(df)
@@ -149,16 +149,33 @@ def make_preds(df, labels):
 	return(cross)
 
 
-def main():
-    col_list = trans_columns()
-    df = get_data(col_list)
-    df = drop_columns(df)
-    df = create_labels(df)
-    labels = get_labels()
-    df = set_actual(df)
-    cross = make_preds(df, labels)
+def train():
+	location = r'C:\Users\bob071988\thinkful\ds-new\UCI\test\X_test.txt'
+	
+	col_list = trans_columns()
+	df = get_data(col_list, location)
+	df = drop_columns(df)
+	df = create_labels(df)
+	labels = get_labels()
+	df = set_actual(df)
+	cross = make_preds(df, labels)
 
-    print(cross)
+	print(cross)
+
+
+
+def main():
+	train()
+	# pass
+    # col_list = trans_columns()
+    # df = get_data(col_list)
+    # df = drop_columns(df)
+    # df = create_labels(df)
+    # labels = get_labels()
+    # df = set_actual(df)
+    # cross = make_preds(df, labels)
+
+    # print(cross)
 
   
     
