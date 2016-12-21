@@ -1,0 +1,51 @@
+dev notes
+
+ git basics
+ git init
+ git add --all
+ git commit -m 'message'
+ git remote add origin https://github.com/oampo/hello_world.git # get url from github.com
+ 
+ Run Jupyter like this
+ jupyter notebook --ip=0.0.0.0 --port=8080 --no-browser
+ 
+ sudo easy_install packages on c9
+ 
+ sudo apt-get install python-pandas
+ 
+ 
+ Ok. Found sort of answer. 
+
+pandas require numpy 1.6, where by default in Ubuntu 10.4 is 1.3
+
+To install newer version of numpy:
+
+http://ubuntuforums.org/showthread.php?t=1573925
+
+After 
+sudo easy_install pandas should work
+
+as3:/usr/local/lib/python2.7/site-packages# cat sitecustomize.py
+# encoding=utf8  
+import sys  
+
+reload(sys)  
+sys.setdefaultencoding('utf8')
+
+pandas errors on install
+
+
+grep -rnw '/path/to/somewhere/' -e "pattern"
+
+ find . -name "pattern" -print
+ 
+ '/usr/local/lib/python2.7/dist-packages'
+ 
+ home/ubuntu/.virtualenvs/ds/local/lib/python2.7/site-packages
+ 
+ Had to install conda to try and make this work
+ 
+
+
+
+ 

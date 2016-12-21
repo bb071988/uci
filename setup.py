@@ -3,6 +3,11 @@
 import pandas as pd
 import numpy as np 
 from sklearn.ensemble import RandomForestClassifier
+import os
+
+cwd = os.getcwd() # global variable ick
+# cwd = cwd.replace('/','\\')
+# print(cwd)
 
 
 # clean up column names
@@ -37,12 +42,12 @@ def trans_columns():
 	return(col_list)
 
 
-def get_data(col_list, location):
+def get_data(col_list):
 	# reads file into df.  Modify to pass location for train and test.
 
-	# location = r'C:\Users\bob071988\thinkful\ds-new\UCI\test\X_test.txt'
+	file = os.path.normpath(cwd + '/test/X_test.txt')
 
-	df = pd.read_table(location, header = None, delim_whitespace=True, names = col_list)
+	df = pd.read_table(file, header = None, delim_whitespace=True, names = col_list)
 	return(df)
 
 
@@ -66,7 +71,8 @@ def drop_columns(df):
 
 
 def create_labels(df):
-	with open(r'C:\Users\bob071988\thinkful\ds-new\UCI\test\y_test.txt','r+') as cat_file:
+	file = os.path.normpath(cwd + '/test/y_test.txt')
+	with open(file ,'r+') as cat_file:
 	    cat_list = []
 	    for line in cat_file: # one line is one column
 	        line = line.strip()
@@ -92,7 +98,7 @@ def create_labels(df):
 	return(df)
 
 def get_labels():
-	with open(r'C:\Users\bob071988\thinkful\ds-new\UCI\new_labels.txt','r+') as new_label_file:
+	with open('new_labels.txt','r+') as new_label_file:
 	    label_list = []
 	    for line in new_label_file: # one line is one column
 	        line = line.strip()
@@ -105,7 +111,8 @@ def get_labels():
 
 def set_actual(df):
 	# get unique list of activities
-	with open(r'C:\Users\bob071988\thinkful\ds-new\UCI\test\y_test.txt','r+') as cat_file:
+	file = os.path.normpath(cwd + '/test/y_test.txt')
+	with open(file ,'r+') as cat_file:
 	    num_list = []
 	    for line in cat_file: # one line is one column
 	        line = line.strip()
@@ -150,10 +157,9 @@ def make_preds(df, labels):
 
 
 def train():
-	location = r'C:\Users\bob071988\thinkful\ds-new\UCI\test\X_test.txt'
 	
 	col_list = trans_columns()
-	df = get_data(col_list, location)
+	df = get_data(col_list)
 	df = drop_columns(df)
 	df = create_labels(df)
 	labels = get_labels()
