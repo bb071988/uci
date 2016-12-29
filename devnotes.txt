@@ -46,6 +46,6 @@ grep -rnw '/path/to/somewhere/' -e "pattern"
  Had to install conda to try and make this work
  
 
-
+sklearn.preprocessing.OneHotEncoder¶ - looking at this to deal with value error on fit
 
  
