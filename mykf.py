@@ -38,20 +38,17 @@ def trans_columns():
 
 def get_data(col_list):
 	# reads file into df.  Modify to pass location for train and test.
-
 	test_file = os.path.normpath(cwd + '/test/X_test.txt')
-
 	dftest = pd.read_table(test_file, header = None, delim_whitespace=True, names = col_list)
-	
-	# train_file = os.path.normpath(cwd + '/train/X_train.txt')
-	
-	# dftrain = pd.read_table(train_file, header = None, delim_whitespace=True, names = col_list)
+
+	train_file = os.path.normpath(cwd + '/train/X_train.txt')
+	dftrain = pd.read_table(train_file, header = None, delim_whitespace=True, names = col_list)
 	
 	# # df.append(df2)
-	# df = dftest.append(dftrain)
+	df = dftest.append(dftrain)
 	
-	# return(df)
-	return(dftest)
+	return(df)
+	# return(dftest)
 
 
 def drop_columns(df):
@@ -72,8 +69,8 @@ def drop_columns(df):
 
 
 def create_labels(df):
-	# file_list = ['/test/y_test.txt','/train/y_train.txt']
-	file_list = ['/test/y_test.txt']
+	file_list = ['/test/y_test.txt','/train/y_train.txt']
+	# file_list = ['/test/y_test.txt']
 	cat_list = []
 	act_num = []
 	for file in file_list:
