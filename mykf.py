@@ -7,14 +7,7 @@ import os
 from sklearn.preprocessing import OneHotEncoder
 
 cwd = os.getcwd() # global variable ick
-# cwd = cwd.replace('/','\\')
-# print(cwd)
 
-
-# clean up column names
-
-
-    
 def fix_col_name(col_split):
         new_string = col_split[1].replace('(','')
         new_string = new_string.replace(')','')
@@ -66,8 +59,6 @@ def drop_columns(df):
 	for col in df.columns.values:
 	    for item in drop_list:
 	        test = col.find(item) # returns -1 if item not found
-	        #print("col is {} and item is {} and test is {}".format(col,item, test))
-	#         print("test val = {}".format(test))
 	        if test == -1:
 	            pass
 	            #print("keeping these = find value {} --- finding {} column value {}".format(test,item, col))
@@ -107,11 +98,6 @@ def create_labels(df):
 				    
 				cat_list.append(activity)
 				act_num.append(line)
-	        
-	  
-	    #print(cat_list)
-	# print('Length of cat_list is {}'.format(len(cat_list)))	
-	# print('Shape of df is {}'.format(df.shape))
 	df['activity'] = cat_list # actual activity
 	df['act_num'] = act_num
 	return(df)
@@ -125,14 +111,8 @@ def get_labels():
 	        line = line.strip()
 	        label_list.append(line)
 	        #print(cat_list)
-	    
-		# df['label'] = label_list # computed from just the 5 values
-	# labels = pd.Series(label_list, index = ['1','2','3','4','5','6']) original modified next line
 	labels = pd.Series(label_list)
-	# df1.loc[:,'f'] = p.Series(np.random.randn(sLength), index=df1.index)
-	# df.loc[:,'label'] = labels
-	
-	# df['label']=labels
+
 	return(labels)
 
 def set_actual(df): # ************ why wasn't train in here too?
@@ -148,40 +128,18 @@ def set_actual(df): # ************ why wasn't train in here too?
 	df['act_num'] = num_list # numerical representation of activity
 	return(df)
 	
-# def pre_process_labels(df):
-# 	rf_enc = OneHotEncoder()
-# 	# Supervised transformation based on random forests
-# # rf = RandomForestClassifier(max_depth=3, n_estimators=n_estimator)
-# # rf_enc = OneHotEncoder()
-# # rf_lm = LogisticRegression()
-# # rf.fit(X_train, y_train)
-# # rf_enc.fit(rf.apply(X_train))
-# # rf_lm.fit(rf_enc.transform(rf.apply(X_train_lr)), y_train_lr)
-	
-# 	pass
-
-# 	return(df)
-
 def make_preds(df, labels):
 	df = df.drop('activity', axis=1) # axis 1 denotes a column not a row
-
 	df['is_train'] = np.random.uniform(0, 1, len(df)) <= .75
-
 	train, test = df[df['is_train']==True], df[df['is_train']==False]
 # 	print(test.shape, train.shape)
 	features = df.columns[:] # changed from :4 - many features may be a little bit important
-	
 	clf = RandomForestClassifier(n_jobs=2)
-
 	clf.fit(train[features], train['act_num'])
 
 	# Kyle's code starts here
 	preds = clf.predict(test[features]) #ask kyle about features
-	
 	s1 = test['act_num']
-	# s2 = pd.Series(preds)
-
-	# s1 = pd.Series(test['activity'])
 	s2 = pd.Series(preds)
 	s2.index = np.arange(len(s2)) # This index needs to be reset
 	s1.index = np.arange(len(s1)) # This one doesn't have to be
@@ -203,8 +161,6 @@ def crosstab():
 	df = drop_columns(df)
 	df = create_labels(df)
 	labels = get_labels()
-	# df = set_actual(df) # consolidated into create_labels
-	# df = pre_process_labels(df)
 	cross = make_preds(df, labels)
 
 	return(cross)
