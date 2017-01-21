@@ -163,34 +163,24 @@ def set_actual(df): # ************ why wasn't train in here too?
 # 	return(df)
 
 def make_preds(df, labels):
-	df.drop('activity', axis=1) # axis 1 denotes a column not a row
+	df = df.drop('activity', axis=1) # axis 1 denotes a column not a row
 
 	df['is_train'] = np.random.uniform(0, 1, len(df)) <= .75
 
 	train, test = df[df['is_train']==True], df[df['is_train']==False]
 	features = df.columns[:] # changed from :4
-	s1 = pd.Series(test['activity']) # grab this before we drop it
-	# looks like when we open the model up to new columns it doesn't like the non numeric values.  Need to hot encode those
-	# or eliminate them from the df.  factorize on activity is incomplete.
 	
-	# create the random forest object - include parameters for the fit here
 	clf = RandomForestClassifier(n_jobs=2)
 
 	
-	# y, _ = pd.factorize(train['activity'])
-	# clf_enc = OneHotEncoder()
-	# clf_enc.fit(clf.apply(train[features]))
-	# clf.fit(train[features], y)
 	clf.fit(train[features], train['act_num'])
 
-	# preds = iris.target_names[clf.predict(test[features])
-	# preds = labels[clf.predict(test[features])]
-
-	# pd.crosstab(test['activity'], preds, rownames=['actual'], colnames=['preds'])
-
-
+	
 	# Kyle's code starts here
 	preds = labels[clf.predict(test[features])] #ask kyle about features
+	
+	s1 = test['act_num']
+	# s2 = pd.Series(preds)
 
 	# s1 = pd.Series(test['activity'])
 	s2 = pd.Series(preds)

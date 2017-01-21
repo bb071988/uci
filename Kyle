@@ -1,0 +1,6 @@
+one hot could be slightly more accurate - especially if there's a continuum.
+
+clf.feature_importances_
+
+http://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+
