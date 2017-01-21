@@ -168,16 +168,15 @@ def make_preds(df, labels):
 	df['is_train'] = np.random.uniform(0, 1, len(df)) <= .75
 
 	train, test = df[df['is_train']==True], df[df['is_train']==False]
-	features = df.columns[:] # changed from :4
+# 	print(test.shape, train.shape)
+	features = df.columns[:] # changed from :4 - many features may be a little bit important
 	
 	clf = RandomForestClassifier(n_jobs=2)
 
-	
 	clf.fit(train[features], train['act_num'])
 
-	
 	# Kyle's code starts here
-	preds = labels[clf.predict(test[features])] #ask kyle about features
+	preds = clf.predict(test[features]) #ask kyle about features
 	
 	s1 = test['act_num']
 	# s2 = pd.Series(preds)
@@ -187,8 +186,9 @@ def make_preds(df, labels):
 	s2.index = np.arange(len(s2)) # This index needs to be reset
 	s1.index = np.arange(len(s1)) # This one doesn't have to be
 	result_df = pd.concat([s1, s2], axis=1)
+# 	print(result_df.shape)
 	result_df.columns = ['actual', 'predicted']
-
+	# print(result_df.head())
 	cross = pd.crosstab(result_df.actual, result_df.predicted)
 	return(cross)
 
@@ -207,14 +207,12 @@ def crosstab():
 	# df = pre_process_labels(df)
 	cross = make_preds(df, labels)
 
-	print(cross)
-	return(df)
-
+	return(cross)
 
 
 def main():
-	df = crosstab()
-  
+	c = crosstab()
+	print(c)
     
 if __name__ == "__main__":
     main()
