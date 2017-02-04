@@ -130,8 +130,9 @@ def make_preds(df, labels):
 	df['is_train'] = np.random.uniform(0, 1, len(df)) <= .75
 	train, test = df[df['is_train']==True], df[df['is_train']==False]
 # 	print(test.shape, train.shape)
-	features = df.columns[:] # changed from :4 - many features may be a little bit important
-	clf = RandomForestClassifier(n_jobs=2)
+	i = np.arange(0,427)
+	features = df.columns[i] # changed from :4 - many features may be a little bit important
+	clf = RandomForestClassifier(n_jobs=2,n_estimators=5) # change estimators to 500 for exercise
 	clf.fit(train[features], train['act_num'])
 
 	# Kyle's code starts here
@@ -145,7 +146,8 @@ def make_preds(df, labels):
 	result_df.columns = ['actual', 'predicted']
 	# print(result_df.head())
 	cross = pd.crosstab(result_df.actual, result_df.predicted)
-	return(cross)
+	feature_imp = clf.feature_importances_
+	return(cross, clf , df)
 
 
 def crosstab():
@@ -158,14 +160,15 @@ def crosstab():
 	df = drop_columns(df)
 	df = create_labels(df)
 	labels = get_labels()
-	cross = make_preds(df, labels)
+	cross, clf, df = make_preds(df, labels)
 
-	return(cross)
+	return(cross, clf, df)
 
 
 def main():
-	c = crosstab()
+	c, feature_imp = crosstab()
 	print(c)
+	print(feature_imp)
     
 if __name__ == "__main__":
     main()
