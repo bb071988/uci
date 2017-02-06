@@ -15,3 +15,9 @@ actual
 6            0    0    0    0    0  499
 
 http://scikit-learn.org/stable/auto_examples/ensemble/plot_forest_importances.html
+
+
+Precision: The ratio of (true positives / (true_positives + true_negatives)). The precision is intuitively the ability of the classifier not to label as positive a sample that is negative.
+Recall: The ratio of (true_positives / (true_positives + false_negatives)). The recall is intuitively the ability of the classifier to find all the positive samples.
+
+ask Kyle about precision and recall - seems binary but we have multiple options.
