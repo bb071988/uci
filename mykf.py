@@ -5,7 +5,8 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier
 import os
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.model_selection import KFold
+# from sklearn.model_selection import KFold
+from sklearn.crossval import KFold
 
 cwd = os.getcwd() # global variable ick
 
@@ -126,29 +127,60 @@ def set_actual(df): # ************ why wasn't train in here too?
 	df['act_num'] = num_list # numerical representation of activity
 	return(df)
 	
-def make_preds(df, labels):
-	df = df.drop('activity', axis=1) # axis 1 denotes a column not a row
-	df['is_train'] = np.random.uniform(0, 1, len(df)) <= .75
-	train, test = df[df['is_train']==True], df[df['is_train']==False]
-# 	print(test.shape, train.shape)
-	i = np.arange(0,427)
-	features = df.columns[i] # changed from :4 - many features may be a little bit important
-	clf = RandomForestClassifier(n_jobs=2,n_estimators=5) # change estimators to 500 for exercise
-	clf.fit(train[features], train['act_num'])
+# def make_preds(df, labels):
+# 	df = df.drop('activity', axis=1) # axis 1 denotes a column not a row
+# 	df['is_train'] = np.random.uniform(0, 1, len(df)) <= .75
+# 	train, test = df[df['is_train']==True], df[df['is_train']==False]
+# # 	print(test.shape, train.shape)
+# 	i = np.arange(0,427)
+# 	features = df.columns[i] # changed from :4 - many features may be a little bit important
+# 	clf = RandomForestClassifier(n_jobs=2,n_estimators=5) # change estimators to 500 for exercise
+# 	clf.fit(train[features], train['act_num'])
 
-	# Kyle's code starts here
-	preds = clf.predict(test[features]) #ask kyle about features
-	s1 = test['act_num']
-	s2 = pd.Series(preds)
-	s2.index = np.arange(len(s2)) # This index needs to be reset
-	s1.index = np.arange(len(s1)) # This one doesn't have to be
-	result_df = pd.concat([s1, s2], axis=1)
-# 	print(result_df.shape)
-	result_df.columns = ['actual', 'predicted']
-	# print(result_df.head())
-	cross = pd.crosstab(result_df.actual, result_df.predicted)
-	feature_imp = clf.feature_importances_
-	return(cross, clf , df, result_df)
+# 	# Kyle's code starts here
+# 	preds = clf.predict(test[features]) #ask kyle about features
+# 	s1 = test['act_num']
+# 	s2 = pd.Series(preds)
+# 	s2.index = np.arange(len(s2)) # This index needs to be reset
+# 	s1.index = np.arange(len(s1)) # This one doesn't have to be
+# 	result_df = pd.concat([s1, s2], axis=1)
+# # 	print(result_df.shape)
+# 	result_df.columns = ['actual', 'predicted']
+# 	# print(result_df.head())
+# 	cross = pd.crosstab(result_df.actual, result_df.predicted)
+# 	feature_imp = clf.feature_importances_
+# 	return(cross, clf , df, result_df)
+
+def make_preds(df, labels):
+	pred_list = []
+	df = df.drop('activity', axis=1) # axis 1 denotes a column not a row
+	# df['is_train'] = np.random.uniform(0, 1, len(df)) <= .75
+	# train, test = df[df['is_train']==True], df[df['is_train']==False]
+	
+	kf = KFold(n_splits=3)
+	# train, test = kf.split(df)
+	for train, test in kf.split(df):
+	# 	print(test.shape, train.shape)
+		i = np.arange(0,427)
+		features = df.columns[i] # changed from :4 - many features may be a little bit important
+		clf = RandomForestClassifier(n_jobs=2,n_estimators=5) # change estimators to 500 for exercise
+		clf.fit(train[features], train['act_num'])
+	
+		# Kyle's code starts here
+		preds = clf.predict(test[features]) #ask kyle about features
+		s1 = test['act_num']
+		s2 = pd.Series(preds)
+		s2.index = np.arange(len(s2)) # This index needs to be reset
+		s1.index = np.arange(len(s1)) # This one doesn't have to be
+		result_df = pd.concat([s1, s2], axis=1)
+	# 	print(result_df.shape)
+		result_df.columns = ['actual', 'predicted']
+		# print(result_df.head())
+		cross = pd.crosstab(result_df.actual, result_df.predicted)
+		# feature_imp = clf.feature_importances_
+		pred_list.append([cross, clf, df, result_df])
+		
+	return(pred_list)
 
 
 def crosstab():
@@ -161,9 +193,9 @@ def crosstab():
 	df = drop_columns(df)
 	df = create_labels(df)
 	labels = get_labels()
-	cross, clf, df, result_df = make_preds(df, labels)
+	pred_list = make_preds(df, labels)
 
-	return(cross, clf, df, result_df)
+	return(pred_list)
 
 
 def main():
