@@ -48,4 +48,6 @@ grep -rnw '/path/to/somewhere/' -e "pattern"
 
 sklearn.preprocessing.OneHotEncoder¶ - looking at this to deal with value error on fit
 
+sudo easy_install pandas - worked on new environment
+
  
